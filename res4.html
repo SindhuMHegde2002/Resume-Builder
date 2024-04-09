@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Resume Builder</title>
+<link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f2f2f2;
+    }
+    .container {
+        max-width: 800px;
+        margin: 50px auto;
+        background-color: #fff;
+        padding: 30px;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+    .resume {
+        margin-top: 50px;
+        max-width: 600px;
+        margin: 0 auto;
+        background-color: #fff;
+        padding: 30px;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+    .resume-header {
+        text-align: center;
+        margin-bottom: 20px;
+        background-color: #007bff;
+        color: #fff;
+        padding: 10px;
+        border-radius: 5px;
+    }
+    .resume-section {
+        margin-bottom: 30px;
+    }
+    .resume-section h2 {
+        margin-bottom: 10px;
+    }
+    .resume-section ul {
+        list-style-type: disc;
+        padding-left: 20px;
+    }
+    .section-divider {
+        border-top: 2px solid #000;
+        margin-top: 20px;
+    }
+    #printButton {
+        display: none;
+    }
+</style>
+</head>
+<body>
+<div class="container">
+    <div class="jumbotron">
+        <h1>Resume Builder</h1>
+    </div>
+
+    <form id="resumeForm">
+        <div class="form-group">
+            <label for="fullName">Full Name</label>
+            <input type="text" class="form-control" id="fullName" name="fullName" required>
+        </div>
+        <div class="form-group">
+            <label for="email">Email</label>
+            <input type="email" class="form-control" id="email" name="email" required>
+        </div>
+        <div class="form-group">
+            <label for="phone">Phone</label>
+            <input type="tel" class="form-control" id="phone" name="phone" required>
+        </div>
+        <div class="form-group">
+            <label for="address">Address</label>
+            <input type="text" class="form-control" id="address" name="address" required>
+        </div>
+        <!-- Education Section -->
+        <div class="form-group" id="educationInputs">
+            <div class="education-entry">
+                <h2>Education</h2>
+                <label class="col-sm-2 col-form-label">Degree:</label>
+                <select class="form-select degree">
+                    <option></option>
+                    <option value="Bachelor">Bachelor</option>
+                    <option value="Master">Master</option>
+                    <option value="PhD">PhD</option>
+                    <option value="Diploma">Diploma</option>
+                    <option value="PUC">PUC</option>
+                    <option value="10th">10th</option>
+                </select>
+                <label class="col-sm-2 col-form-label"></label>
+                <input type="text" class="form-control name" placeholder="Institution Name">
+                <label class="col-sm-2 col-form-label">From</label>
+                <input type="date" class="form-control date" placeholder="Enter year">
+                <label class="col-sm-2 col-form-label">Percentage</label>
+                <input type="text" class="form-control percentage" placeholder="Enter percentage">
+            </div>
+        </div>
+        <button type="button" id="addEducation" class="btn btn-secondary">Add Another Education</button>
+
+        <!-- Skills Section -->
+        <div class="form-group" id="skillsInputs">
+            <div class="skill-entry">
+                <h2>Skills</h2>
+                <input type="text" class="form-control skill" placeholder="Enter skill">
+            </div>
+        </div>
+        <button type="button" id="addSkills" class="btn btn-secondary">Add Another Skill</button>
+
+        <div class="form-group">
+            <label for="experience">Experience</label>
+            <textarea class="form-control" id="experience" name="experience" rows="4" required></textarea>
+        </div>
+
+        <button type="button" id="generateResume" class="btn btn-primary">Generate Resume</button>
+    </form>
+
+    <div class="resume" id="resumeOutput" style="display:none;">
+        <div class="resume-header">
+            <h1 id="outputName"></h1>
+            <p>Email: <span id="outputEmail"></span></p>
+            <p>Phone: <span id="outputPhone"></span></p>
+            <p>Address: <span id="outputAddress"></span></p>
+        </div>
+        <div class="resume-section" id="educationSection">
+            <h2>Education</h2>
+            <div class="section-divider"></div>
+            <ul id="outputEducation"></ul>
+        </div>
+        <div class="resume-section" id="experienceSection">
+            <h2>Experience</h2>
+            <div class="section-divider"></div>
+            <p id="outputExperience"></p>
+        </div>
+        <div class="resume-section" id="skillsSection">
+            <h2>Skills</h2>
+            <div class="section-divider"></div>
+            <ul id="outputSkills"></ul>
+        </div>
+    </div>
+
+    <button id="printButton" class="btn btn-primary" onclick="printResume()">Print Resume</button>
+</div>
+
+<script>
+    document.getElementById('addEducation').addEventListener('click', function() {
+        var educationInputs = document.getElementById('educationInputs');
+        var newEducationEntry = document.createElement('div');
+        newEducationEntry.classList.add('education-entry');
+        newEducationEntry.innerHTML = `
+            <label class="col-sm-2 col-form-label">Degree:</label>
+            <select class="form-select degree">
+                <option></option>
+                <option value="Bachelor">Bachelor</option>
+                <option value="Master">Master</option>
+                <option value="PhD">PhD</option>
+                <option value="Diploma">Diploma</option>
+                <option value="PUC">PUC</option>
+                <option value="10th">10th</option>
+            </select>
+            <label class="col-sm-2 col-form-label"></label>
+            <input type="text" class="form-control name" placeholder="Institution Name">
+            <label class="col-sm-2 col-form-label">From</label>
+            <input type="date" class="form-control date" placeholder="Enter year">
+            <label class="col-sm-2 col-form-label">Percentage</label>
+            <input type="text" class="form-control percentage" placeholder="Enter percentage">
+        `;
+        educationInputs.appendChild(newEducationEntry);
+    });
+
+    document.getElementById('addSkills').addEventListener('click', function() {
+        var skillsInputs = document.getElementById('skillsInputs');
+        var newSkillEntry = document.createElement('div');
+        newSkillEntry.classList.add('skill-entry');
+        newSkillEntry.innerHTML = '<h2>Skills</h2><input type="text" class="form-control skill" placeholder="Enter skill">';
+        skillsInputs.appendChild(newSkillEntry);
+    });
+
+    document.getElementById('generateResume').addEventListener('click', function() {
+        // Gather form data
+        var fullName = document.getElementById('fullName').value;
+        var email = document.getElementById('email').value;
+        var phone = document.getElementById('phone').value;
+        var address = document.getElementById('address').value;
+
+        // Display resume
+        document.getElementById('outputName').innerText = fullName;
+        document.getElementById('outputEmail').innerText = email;
+        document.getElementById('outputPhone').innerText = phone;
+        document.getElementById('outputAddress').innerText = address;
+
+        // Gather education entries
+        var educationEntries = document.querySelectorAll('.education-entry');
+        var educationList = document.getElementById('outputEducation');
+        educationList.innerHTML = ''; // Clear existing content
+
+        educationEntries.forEach(function(entry) {
+            var degree = entry.querySelector('.degree').value;
+            var name = entry.querySelector('.name').value;
+            var fromDate = entry.querySelector('.date').value;
+            var percentage = entry.querySelector('.percentage').value;
+
+            var listItem = document.createElement('li');
+            listItem.textContent = `Degree: ${degree}`;
+            educationList.appendChild(listItem);
+
+            listItem = document.createElement('li');
+            listItem.textContent = `Institution Name: ${name}`;
+            educationList.appendChild(listItem);
+
+            listItem = document.createElement('li');
+            listItem.textContent = `From: ${fromDate}`;
+            educationList.appendChild(listItem);
+
+            listItem = document.createElement('li');
+            listItem.textContent = `Percentage: ${percentage}`;
+            educationList.appendChild(listItem);
+
+            listItem = document.createElement('br');
+            educationList.appendChild(listItem);
+        });
+
+        // Gather skill entries
+        var skillEntries = document.querySelectorAll('.skill-entry input');
+        var skillsList = document.getElementById('outputSkills');
+        skillsList.innerHTML = ''; // Clear existing content
+
+        skillEntries.forEach(function(entry) {
+            var skill = entry.value;
+            var listItem = document.createElement('li');
+            listItem.textContent = skill;
+            skillsList.appendChild(listItem);
+        });
+
+        // Show generated resume
+        document.getElementById('resumeOutput').style.display = 'block';
+
+        // Hide form
+        document.getElementById('resumeForm').style.display = 'none';
+
+        // Show print button
+        document.getElementById('printButton').style.display = 'block';
+    });
+
+    // Function to print the resume
+    function printResume() {
+        var printContents = document.getElementById('resumeOutput').innerHTML;
+        var originalContents = document.body.innerHTML;
+
+        document.body.innerHTML = printContents;
+
+        window.print();
+
+        document.body.innerHTML = originalContents;
+    }
+</script>
+</body>
+</html>
